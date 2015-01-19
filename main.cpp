@@ -2,6 +2,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include "opencv2/opencv.hpp"
 #include <iostream>
+#include "GuiNinc.h"
 
 using namespace cv;
 using namespace std;
@@ -23,13 +24,12 @@ int main( int argc, char** argv )
   const int CAM_HEIGHT = 2000;
   const int CAM_WIDTH = 2000;
 
+  bool test = true;
+
   int display_width = 1280;
   int display_height = 720;
 
-
-  Mat frame;
-  Mat prev_frame;
-
+  Mat images[2];
 
   VideoCapture cap(0); // open the default camera
   if(!cap.isOpened())  // check if we succeeded
@@ -40,10 +40,10 @@ int main( int argc, char** argv )
   cap.set(CAP_PROP_FRAME_HEIGHT, CAM_HEIGHT);
     
 
-  cap >> frame;
+  cap >> images[0];
 
   // Open the output
-  Size frame_size = Size(frame.cols, frame.rows);
+  Size frame_size = Size(images[0].cols, images[0].rows);
   //initialize the VideoWriter object 
   VideoWriter out_video("out.avi", CV_FOURCC('X','2','6','4'), 30.0, frame_size, false);
 
@@ -54,35 +54,39 @@ int main( int argc, char** argv )
       return -1;
     }
 
-  bool test = true;
+  /*
   Mat edges;
   namedWindow("edges",0);
   namedWindow("frame",0);
   resizeWindow("edges", display_width, display_height);
   resizeWindow("frame", display_width, display_height);
-  
+  */
+
+
+  GuiNinc gui(display_width, display_height, "Camera setup");
+
 
   for(;;)
     {
-      cap >> frame; // get a new frame from camera
-      cvtColor(frame, edges, CV_BGR2GRAY);
-      GaussianBlur(edges, edges, Size(7,7), 1.5, 1.5);
-      Canny(edges, edges, 0, 30, 3);
-      imshow("edges", edges);
-      imshow("frame", frame);
+      cap >> images[0]; // get a new frame from camera
+      cvtColor(images[0], images[1], CV_BGR2GRAY);
+      GaussianBlur(images[1], images[1], Size(7,7), 1.5, 1.5);
+      Canny(images[1], images[1], 0, 30, 3);
+      
+      gui.display(1, 2, images);
 
       if(test)
 	{
 	  cout << "EDGES" << endl;
-	  print_mat_info(edges);
+	  print_mat_info(images[1]);
 
 
 	  cout << "FRAME" << endl;
-	  print_mat_info(frame);
+	  print_mat_info(images[0]);
 	  test = false;
 	}
 
-      out_video.write(edges);
+      out_video.write(images[1]);
 
       if(waitKey(30) >= 0) break;
     }
