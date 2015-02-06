@@ -1,7 +1,9 @@
+// 
 //
-//  Created by Cedric Verstraeten on 18/02/14.
-//  Copyright (c) 2014 Cedric Verstraeten. All rights reserved.
 //
+// Based on scripts by Cedric Verstraeten on 18/02/14. Please visit 
+// http://blog.cedric.ws/opencv-simple-motion-detection to support his work.
+//  
 
 #include "opencv2/opencv.hpp"
 #include "opencv2/highgui/highgui.hpp"
@@ -44,8 +46,6 @@ inline bool saveImg(Mat image, const string DIRECTORY, const string EXTENSION, c
     strftime (TIME,80,DIR_FORMAT,timeinfo);
     ss.str("");
     ss << DIRECTORY << TIME;
-    directoryExistsOrCreate(ss.str().c_str());
-    ss << "/cropped";
     directoryExistsOrCreate(ss.str().c_str());
 
     // Create name for the image
@@ -119,10 +119,10 @@ inline int detectMotion(const Mat & motion, Mat & result, Mat & result_cropped,
 
 int main (int argc, char * const argv[])
 {
-    const string DIR = "/home/ninc/projects/SecureCam/pics/"; // directory where the images will be stored
+    const string DIR = "/home/ninc/Dropbox/projects/SecureCam/pics/"; // directory where the images will be stored
     const string EXT = ".jpg"; // extension of the images
     const int DELAY = 500; // in mseconds, take a picture every 1/2 second
-    const string LOGFILE = "/home/ninc/projects/SecureCam/log";
+    const string LOGFILE = "/home/ninc/Dropbox/projects/SecureCam/log";
 
     // Format of directory
     string DIR_FORMAT = "%d%h%Y"; // 1Jan1970
@@ -173,7 +173,7 @@ int main (int argc, char * const argv[])
     int there_is_motion = 5;
 
     // Maximum deviation of the image, the higher the value, the more motion is allowed
-    int max_deviation = 10;
+    int max_deviation = 20;
 
     // Erode kernel
     Mat kernel_ero = getStructuringElement(MORPH_RECT, Size(2,2));
