@@ -1,6 +1,6 @@
 CC = g++
 CFLAGS = -std=c++11 -g -Wall -Wextra
-SRCS = main.cpp GuiNinc.cpp
+SRCS = main.cpp
 TARGET = SecureCam
 
 OPENCV = `pkg-config opencv --cflags --libs`
